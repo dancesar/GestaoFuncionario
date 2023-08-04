@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Data
 public class FuncionarioDto {
 
+    private Long id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -16,6 +17,5 @@ public class FuncionarioDto {
     private String fone;
     @NotBlank
     private String endereco;
-    @NotBlank
     private BigDecimal salario;
 }
