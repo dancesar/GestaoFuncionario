@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class FuncionarioService implements IFuncionarioService {
@@ -19,12 +20,15 @@ public class FuncionarioService implements IFuncionarioService {
     @Autowired
     private IFuncionarioRepository iFuncionarioRepository;
 
+    private Logger logger = Logger.getLogger(Funcionario.class.getName());
+
     @Override
     public Boolean cadastrarFuncionario(FuncionarioDto funcionarioDto) {
         try{
             ModelMapper mapper = new ModelMapper();
             Funcionario funcionario = mapper.map(funcionarioDto, Funcionario.class);
             this.iFuncionarioRepository.save(funcionario);
+            logger.info("Criado Funcionário!");
             return true;
         } catch (Exception e){
             return false;
@@ -34,6 +38,7 @@ public class FuncionarioService implements IFuncionarioService {
     @Override
     public List<Funcionario> listarFuncionario() {
         try{
+            logger.info("Listado todos funcionários!");
             return this.iFuncionarioRepository.findAll();
         } catch (Exception e) {
             return new ArrayList<>();
@@ -45,6 +50,7 @@ public class FuncionarioService implements IFuncionarioService {
         try {
             Optional<Funcionario> funcionarioOptional = this.iFuncionarioRepository.findById(id);
             if(funcionarioOptional.isPresent()) {
+                logger.info("Encontrado funcionário: " + funcionarioOptional.get().getNome());
                 return funcionarioOptional.get();
             }
             throw new FuncionarioException("Funcionário não encontrado.", HttpStatus.NOT_FOUND);
@@ -65,6 +71,7 @@ public class FuncionarioService implements IFuncionarioService {
 
             this.iFuncionarioRepository.save(funcionarioAtualizado);
 
+            logger.info("Funcionário Atualizado!");
             return Boolean.TRUE;
         } catch (FuncionarioException m) {
             throw m;
@@ -78,6 +85,7 @@ public class FuncionarioService implements IFuncionarioService {
         try {
             this.consultarFuncionario(id);
             this.iFuncionarioRepository.deleteById(id);
+            logger.info("Funcionário excluído!");
             return true;
         } catch (FuncionarioException m) {
             throw m;
